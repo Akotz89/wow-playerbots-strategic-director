@@ -1,4 +1,5 @@
 name: Portable director checks
+# Offline Python and schema checks only; native builds use the WSL host guard.
 on:
   push:
   pull_request:
