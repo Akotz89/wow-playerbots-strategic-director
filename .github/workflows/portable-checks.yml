@@ -1,0 +1,28 @@
+name: Portable director checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  python-and-schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Install schema validation dependencies
+        run: python -m pip install -r requirements-test.txt
+      - name: Test Python compilers and policy
+        run: |
+          python -B tests/content_graph_compiler_tests.py
+          python -B tests/route_catalog_compiler_tests.py
+          python -B tests/party_policy_tests.py
+          python -B tests/quest_policy_tests.py
+      - name: Verify schemas and route fixture
+        run: |
+          python -B tests/canonical_schema_parity.py
+          python -B tools/compile_route_catalog.py fixtures/northshire-contract.route.json --verify
+          python -B tools/validate_schemas.py
