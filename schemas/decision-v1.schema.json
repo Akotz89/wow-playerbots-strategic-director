@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/decision-v1.schema.json",
+  "title": "Playerbots explainable strategic decision v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "decision_id", "decided_at_seconds", "context", "policy_version", "policy_identity", "observation_digest", "disposition", "selected_objective_id", "evaluations"],
+  "properties": {
+    "schema_version": { "const": "cpi-207-decision-v1" },
+    "decision_id": { "$ref": "common-v1.schema.json#/$defs/stable_id" },
+    "decided_at_seconds": { "$ref": "common-v1.schema.json#/$defs/timestamp" },
+    "context": { "$ref": "common-v1.schema.json#/$defs/execution_context" },
+    "policy_version": { "$ref": "common-v1.schema.json#/$defs/revision" },
+    "policy_identity": { "type": "string", "minLength": 1, "maxLength": 2048 },
+    "observation_digest": { "$ref": "common-v1.schema.json#/$defs/digest" },
+    "disposition": { "enum": ["selected_objective", "stock_new_rpg_fallback", "defer_existing_control"] },
+    "selected_objective_id": { "anyOf": [{ "$ref": "common-v1.schema.json#/$defs/stable_id" }, { "type": "null" }] },
+    "evaluations": {
+      "type": "array", "maxItems": 10000,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["objective_id", "eligible", "score", "retry_at_seconds", "reason_codes"],
+        "properties": {
+          "objective_id": { "$ref": "common-v1.schema.json#/$defs/stable_id" },
+          "eligible": { "type": "boolean" },
+          "score": { "type": "integer", "minimum": -9223372036854775808, "maximum": 9223372036854775807 },
+          "retry_at_seconds": { "$ref": "common-v1.schema.json#/$defs/timestamp" },
+          "reason_codes": { "type": "array", "items": { "type": "string", "pattern": "^[a-z][a-z0-9_.:-]*$", "maxLength": 200 } }
+        }
+      }
+    }
+  }
+}

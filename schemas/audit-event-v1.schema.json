@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/audit-event-v1.schema.json",
+  "title": "Playerbots tamper-evident strategic audit event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "sequence", "occurred_at_seconds", "character_id", "event_kind", "previous_event_digest", "payload_digest", "event_digest"],
+  "properties": {
+    "schema_version": { "const": "cpi-207-audit-event-v1" },
+    "sequence": { "type": "integer", "minimum": 1, "maximum": 18446744073709551615 },
+    "occurred_at_seconds": { "$ref": "common-v1.schema.json#/$defs/timestamp" },
+    "character_id": { "type": "integer", "minimum": 1, "maximum": 18446744073709551615 },
+    "event_kind": { "enum": ["observation", "decision", "goal_transition", "outcome", "failure", "route_sync", "profile_change", "group_transition"] },
+    "previous_event_digest": { "anyOf": [{ "$ref": "common-v1.schema.json#/$defs/digest" }, { "type": "null" }] },
+    "payload_digest": { "$ref": "common-v1.schema.json#/$defs/digest" },
+    "event_digest": { "$ref": "common-v1.schema.json#/$defs/digest" }
+  }
+}

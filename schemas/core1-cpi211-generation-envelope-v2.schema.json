@@ -1,0 +1,789 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/core1-cpi211-generation-envelope-v2.schema.json",
+  "title": "CPI-211 paired generation identity envelope v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "scope",
+    "identity_commitment",
+    "source_identity",
+    "generation_identity",
+    "world_snapshot",
+    "coverage",
+    "support_inputs",
+    "compiler_schema_closure"
+  ],
+  "properties": {
+    "schema": {
+      "const": "core1-cpi211-generation-envelope-v2"
+    },
+    "scope": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "identity_commitment": {
+      "type": "object",
+      "required": [
+        "scope",
+        "source_identity",
+        "world_snapshot",
+        "raw_generation_snapshot_id",
+        "native_source_snapshot_id",
+        "request_batches",
+        "coverage",
+        "support_inputs",
+        "compiler_schema_closure"
+      ]
+    },
+    "source_identity": {
+      "$ref": "#/$defs/source_identity"
+    },
+    "generation_identity": {
+      "$ref": "#/$defs/generation_identity"
+    },
+    "world_snapshot": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": true,
+      "minProperties": 1
+    },
+    "support_inputs": {
+      "type": "object"
+    },
+    "compiler_schema_closure": {
+      "type": "object",
+      "minProperties": 1
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "file_descriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "bytes",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "pathset_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_count",
+        "sha256"
+      ],
+      "properties": {
+        "entry_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16384
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "bundle_pathset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "artifact",
+        "entry_count",
+        "bundle_identity_sha256",
+        "lifecycle",
+        "component_revision_status"
+      ],
+      "properties": {
+        "schema": {
+          "const": "realm-vfs-source-composition-v1"
+        },
+        "artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "bytes",
+            "sha256"
+          ],
+          "properties": {
+            "path": {
+              "const": "work/core2-native-held-custody-recovery-20261021/attempts/01/composition.json"
+            },
+            "bytes": {
+              "const": 1092619
+            },
+            "sha256": {
+              "const": "d866aa6b28761b769de8f7b5bb3d76a66a89389ba5746bbe47372425f4c55b7b"
+            }
+          }
+        },
+        "entry_count": {
+          "const": 5395
+        },
+        "bundle_identity_sha256": {
+          "const": "f4764eb77295c24027d407bd7476041e5796b625602031549b71465993ce037b"
+        },
+        "lifecycle": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "built",
+            "deployed",
+            "runtime_verified",
+            "final_composition_acceptance"
+          ],
+          "properties": {
+            "built": {
+              "const": false
+            },
+            "deployed": {
+              "const": false
+            },
+            "runtime_verified": {
+              "const": false
+            },
+            "final_composition_acceptance": {
+              "const": "pending"
+            }
+          }
+        },
+        "component_revision_status": {
+          "const": "unmapped"
+        }
+      }
+    },
+    "component_revision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "revision",
+        "pathset",
+        "evidence",
+        "reason"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "verified",
+            "unmapped",
+            "unknown"
+          ]
+        },
+        "revision": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "pathset": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/pathset_ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/file_descriptor"
+          },
+          "maxItems": 16384
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "verified"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "revision": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              },
+              "reason": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "revision": {
+                "type": "null"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "source_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "identity_mode",
+        "bundle_pathset",
+        "component_revisions"
+      ],
+      "properties": {
+        "schema": {
+          "const": "core1-cpi211-source-identity-v2"
+        },
+        "identity_mode": {
+          "enum": [
+            "component_revisions",
+            "bundle_pathset"
+          ]
+        },
+        "bundle_pathset": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema",
+            "artifact",
+            "entry_count",
+            "bundle_identity_sha256",
+            "lifecycle",
+            "component_revision_status"
+          ],
+          "properties": {
+            "schema": {
+              "const": "realm-vfs-source-composition-v1"
+            },
+            "artifact": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "bytes",
+                "sha256"
+              ],
+              "properties": {
+                "path": {
+                  "const": "work/core2-native-held-custody-recovery-20261021/attempts/01/composition.json"
+                },
+                "bytes": {
+                  "const": 1092619
+                },
+                "sha256": {
+                  "const": "d866aa6b28761b769de8f7b5bb3d76a66a89389ba5746bbe47372425f4c55b7b"
+                }
+              }
+            },
+            "entry_count": {
+              "const": 5395
+            },
+            "bundle_identity_sha256": {
+              "const": "f4764eb77295c24027d407bd7476041e5796b625602031549b71465993ce037b"
+            },
+            "lifecycle": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "built",
+                "deployed",
+                "runtime_verified",
+                "final_composition_acceptance"
+              ],
+              "properties": {
+                "built": {
+                  "const": false
+                },
+                "deployed": {
+                  "const": false
+                },
+                "runtime_verified": {
+                  "const": false
+                },
+                "final_composition_acceptance": {
+                  "const": "pending"
+                }
+              }
+            },
+            "component_revision_status": {
+              "const": "unmapped"
+            }
+          }
+        },
+        "component_revisions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "core",
+            "playerbots",
+            "progression",
+            "content"
+          ],
+          "properties": {
+            "core": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "status",
+                "revision",
+                "pathset",
+                "evidence",
+                "reason"
+              ],
+              "properties": {
+                "status": {
+                  "enum": [
+                    "verified",
+                    "unmapped",
+                    "unknown"
+                  ]
+                },
+                "revision": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                "pathset": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/pathset_ref"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/file_descriptor"
+                  },
+                  "maxItems": 16384
+                },
+                "reason": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "minLength": 1
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "status": {
+                        "const": "verified"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "revision": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{40}$"
+                      },
+                      "reason": {
+                        "type": "null"
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "revision": {
+                        "type": "null"
+                      },
+                      "reason": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "playerbots": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "status",
+                "revision",
+                "pathset",
+                "evidence",
+                "reason"
+              ],
+              "properties": {
+                "status": {
+                  "enum": [
+                    "verified",
+                    "unmapped",
+                    "unknown"
+                  ]
+                },
+                "revision": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                "pathset": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/pathset_ref"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/file_descriptor"
+                  },
+                  "maxItems": 16384
+                },
+                "reason": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "minLength": 1
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "status": {
+                        "const": "verified"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "revision": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{40}$"
+                      },
+                      "reason": {
+                        "type": "null"
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "revision": {
+                        "type": "null"
+                      },
+                      "reason": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "progression": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "status",
+                "revision",
+                "pathset",
+                "evidence",
+                "reason"
+              ],
+              "properties": {
+                "status": {
+                  "enum": [
+                    "verified",
+                    "unmapped",
+                    "unknown"
+                  ]
+                },
+                "revision": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                "pathset": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/pathset_ref"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/file_descriptor"
+                  },
+                  "maxItems": 16384
+                },
+                "reason": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "minLength": 1
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "status": {
+                        "const": "verified"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "revision": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{40}$"
+                      },
+                      "reason": {
+                        "type": "null"
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "revision": {
+                        "type": "null"
+                      },
+                      "reason": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "content": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "status",
+                "revision",
+                "pathset",
+                "evidence",
+                "reason"
+              ],
+              "properties": {
+                "status": {
+                  "enum": [
+                    "verified",
+                    "unmapped",
+                    "unknown"
+                  ]
+                },
+                "revision": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                "pathset": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/pathset_ref"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/file_descriptor"
+                  },
+                  "maxItems": 16384
+                },
+                "reason": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "minLength": 1
+                }
+              },
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "status": {
+                        "const": "verified"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "revision": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{40}$"
+                      },
+                      "reason": {
+                        "type": "null"
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "revision": {
+                        "type": "null"
+                      },
+                      "reason": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "generation_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "generation_id",
+        "source_identity_digest",
+        "bundle_identity_sha256",
+        "raw_generation_snapshot_id",
+        "native_source_snapshot_id",
+        "request_batches",
+        "coverage_commitment_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "core1-cpi211-generation-reference-v1"
+        },
+        "generation_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_identity_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "bundle_identity_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "raw_generation_snapshot_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "native_source_snapshot_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9A-F]{64}$"
+        },
+        "request_batches": {
+          "type": "array",
+          "maxItems": 16384,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "batch_ordinal",
+              "operation_id",
+              "source_snapshot_id",
+              "request_keys_sha256"
+            ],
+            "properties": {
+              "batch_ordinal": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 16383
+              },
+              "operation_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "source_snapshot_id": {
+                "type": "string",
+                "pattern": "^[0-9A-F]{64}$"
+              },
+              "request_keys_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        },
+        "coverage_commitment_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

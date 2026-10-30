@@ -1,0 +1,67 @@
+{
+  "schema_version": "cpi-207-route-v1",
+  "route_id": "route:northshire-contract",
+  "route_revision": "northshire-contract-v1",
+  "catalogue_digest": "257650e313c11afe3f2d92eefabd231932d39ccc21c11b1fc1a4fa568e97e804",
+  "content_revision": "phase-1-19-v1",
+  "core_revision": "9fb906bb7296212ff42fc95ff73a92aaf8554f0d",
+  "playerbots_revision": "2f7d9f774987d0157c6a0d0cc08c40bec3db3945",
+  "provenance": [
+    {
+      "source": "CPI-207 contract fixture; not an accepted gameplay route",
+      "kind": "realm_authored",
+      "license_status": "realm_owned",
+      "notes": "Exercises prerequisites and explicit skip semantics only."
+    }
+  ],
+  "steps": [
+    {
+      "stable_id": "quest:783",
+      "kind": "quest",
+      "prerequisites": [],
+      "prerequisite_any_of": [],
+      "exclusive_group": null,
+      "cluster_id": "cluster:northshire-abbey",
+      "may_skip": false,
+      "skip_satisfies_dependents": false,
+      "content_refs": [{"kind": "quest", "id": 783}],
+      "earned_source": true,
+      "required_capabilities": ["quest_kill"],
+      "constraints": {"minimum_level": 1, "maximum_level": 5, "minimum_phase": 1, "maximum_phase": 1, "required_group_size": 1},
+      "values": {"xp": 10, "unlocks": 1, "gear": 0, "profession": 0, "continuity": 2, "group_synergy": 0},
+      "costs": {"travel_seconds": 30, "execution_seconds": 120, "risk_milli": 100, "contention_milli": 0}
+    },
+    {
+      "stable_id": "quest:optional-example",
+      "kind": "quest",
+      "prerequisites": ["quest:783"],
+      "prerequisite_any_of": [],
+      "exclusive_group": null,
+      "cluster_id": "cluster:northshire-abbey",
+      "may_skip": true,
+      "skip_satisfies_dependents": true,
+      "content_refs": [{"kind": "quest", "id": 7}],
+      "earned_source": true,
+      "required_capabilities": ["quest_kill"],
+      "constraints": {"minimum_level": 2, "maximum_level": 6, "minimum_phase": 1, "maximum_phase": 1, "required_group_size": 1},
+      "values": {"xp": 8, "unlocks": 1, "gear": 1, "profession": 0, "continuity": 2, "group_synergy": 0},
+      "costs": {"travel_seconds": 45, "execution_seconds": 180, "risk_milli": 150, "contention_milli": 0}
+    },
+    {
+      "stable_id": "train:class-rank-example",
+      "kind": "train",
+      "prerequisites": ["quest:optional-example"],
+      "prerequisite_any_of": [],
+      "exclusive_group": null,
+      "cluster_id": "cluster:northshire-abbey",
+      "may_skip": false,
+      "skip_satisfies_dependents": false,
+      "content_refs": [{"kind": "trainer", "id": 1}],
+      "earned_source": true,
+      "required_capabilities": ["trainer_interaction"],
+      "constraints": {"minimum_level": 2, "maximum_level": 10, "minimum_phase": 1, "maximum_phase": 1, "required_group_size": 1},
+      "values": {"xp": 0, "unlocks": 2, "gear": 0, "profession": 0, "continuity": 1, "group_synergy": 0},
+      "costs": {"travel_seconds": 60, "execution_seconds": 30, "risk_milli": 0, "contention_milli": 0}
+    }
+  ]
+}

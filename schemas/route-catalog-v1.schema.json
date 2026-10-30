@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/route-catalog-v1.schema.json",
+  "title": "Playerbots strategic guide route catalogue v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "route_id",
+    "route_revision",
+    "catalogue_digest",
+    "content_revision",
+    "core_revision",
+    "playerbots_revision",
+    "provenance",
+    "steps"
+  ],
+  "properties": {
+    "schema_version": { "const": "cpi-207-route-v1" },
+    "route_id": { "$ref": "#/$defs/stable_id" },
+    "route_revision": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "catalogue_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "content_revision": { "type": "string", "minLength": 1 },
+    "core_revision": { "type": "string", "minLength": 7 },
+    "playerbots_revision": { "type": "string", "minLength": 7 },
+    "provenance": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "kind", "license_status"],
+        "properties": {
+          "source": { "type": "string", "minLength": 1 },
+          "kind": {
+            "enum": ["azerothcore_world_db", "realm_authored", "realm_telemetry", "open_reference"]
+          },
+          "license_status": {
+            "enum": ["realm_owned", "database_fact", "compatible", "concept_only", "permission_required"]
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/step" }
+    }
+  },
+  "$defs": {
+    "stable_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*:[a-zA-Z0-9_.:-]+$"
+    },
+    "nonnegative_integer": { "type": "integer", "minimum": 0 },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stable_id",
+        "kind",
+        "prerequisites",
+        "prerequisite_any_of",
+        "exclusive_group",
+        "cluster_id",
+        "may_skip",
+        "skip_satisfies_dependents",
+        "content_refs",
+        "earned_source",
+        "constraints",
+        "values",
+        "costs"
+      ],
+      "properties": {
+        "stable_id": { "$ref": "#/$defs/stable_id" },
+        "kind": {
+          "enum": [
+            "quest",
+            "grind",
+            "train",
+            "vendor",
+            "set_hearth",
+            "flight",
+            "item_source",
+            "dungeon",
+            "profession",
+            "idle"
+          ]
+        },
+        "prerequisites": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/stable_id" }
+        },
+        "prerequisite_any_of": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 64,
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 64,
+            "uniqueItems": true,
+            "items": { "$ref": "#/$defs/stable_id" }
+          }
+        },
+        "exclusive_group": { "anyOf": [{ "$ref": "#/$defs/stable_id" }, { "type": "null" }] },
+        "cluster_id": { "anyOf": [{ "$ref": "#/$defs/stable_id" }, { "type": "null" }] },
+        "may_skip": { "type": "boolean" },
+        "skip_satisfies_dependents": { "type": "boolean" },
+        "content_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "id"],
+            "properties": {
+              "kind": { "enum": ["quest", "item", "creature", "gameobject", "spell", "trainer", "vendor", "taxi_node", "area", "map", "dungeon", "loot_template", "recipe"] },
+              "id": { "type": "integer", "minimum": 0, "maximum": 4294967295 }
+            }
+          }
+        },
+        "earned_source": { "type": "boolean" },
+        "required_capabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 64,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "constraints": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["minimum_level", "maximum_level", "minimum_phase", "maximum_phase", "required_group_size"],
+          "properties": {
+            "minimum_level": { "type": "integer", "minimum": 1, "maximum": 80 },
+            "maximum_level": { "type": "integer", "minimum": 1, "maximum": 80 },
+            "minimum_phase": { "type": "integer", "minimum": 1 },
+            "maximum_phase": { "type": "integer", "minimum": 1 },
+            "required_group_size": { "type": "integer", "minimum": 1, "maximum": 40 }
+          }
+        },
+        "values": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["xp", "unlocks", "gear", "profession", "continuity", "group_synergy"],
+          "properties": {
+            "xp": { "$ref": "#/$defs/nonnegative_integer" },
+            "unlocks": { "$ref": "#/$defs/nonnegative_integer" },
+            "gear": { "$ref": "#/$defs/nonnegative_integer" },
+            "profession": { "$ref": "#/$defs/nonnegative_integer" },
+            "continuity": { "$ref": "#/$defs/nonnegative_integer" },
+            "group_synergy": { "$ref": "#/$defs/nonnegative_integer" }
+          }
+        },
+        "costs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["travel_seconds", "execution_seconds", "risk_milli", "contention_milli"],
+          "properties": {
+            "travel_seconds": { "$ref": "#/$defs/nonnegative_integer" },
+            "execution_seconds": { "$ref": "#/$defs/nonnegative_integer" },
+            "risk_milli": { "$ref": "#/$defs/nonnegative_integer" },
+            "contention_milli": { "$ref": "#/$defs/nonnegative_integer" }
+          }
+        }
+      }
+    }
+  }
+}

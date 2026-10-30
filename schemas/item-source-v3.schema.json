@@ -1,0 +1,479 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/item-source-v3.schema.json",
+  "title": "Playerbots earned item-source graph v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "graph_digest",
+    "item_id",
+    "sources",
+    "generation_identity"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "cpi-211-item-source-v3"
+    },
+    "content_revision": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "graph_digest": {
+      "$ref": "common-v1.schema.json#/$defs/digest"
+    },
+    "item_id": {
+      "$ref": "common-v1.schema.json#/$defs/uint32"
+    },
+    "sources": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "source_kind",
+          "source_ref",
+          "minimum_count",
+          "maximum_count",
+          "chance_numerator",
+          "chance_denominator",
+          "minimum_phase",
+          "maximum_phase",
+          "required_group_size",
+          "money_cost_copper",
+          "travel_seconds",
+          "seconds_per_attempt",
+          "risk_evidence",
+          "contention_evidence",
+          "required_capabilities",
+          "required_profession_skill_id",
+          "required_profession_skill_value",
+          "quest_alternative_group",
+          "craft_dependencies",
+          "condition_root",
+          "earned"
+        ],
+        "properties": {
+          "source_id": {
+            "$ref": "common-v1.schema.json#/$defs/stable_id"
+          },
+          "source_kind": {
+            "enum": [
+              "quest_reward",
+              "creature_loot",
+              "gameobject_loot",
+              "vendor",
+              "trainer_recipe",
+              "craft",
+              "pvp_reward",
+              "dungeon_quest",
+              "dungeon_drop",
+              "disenchant",
+              "prospecting",
+              "milling",
+              "fishing",
+              "skinning"
+            ]
+          },
+          "source_ref": {
+            "$ref": "common-v1.schema.json#/$defs/content_ref"
+          },
+          "minimum_count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "maximum_count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "chance_numerator": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000
+          },
+          "chance_denominator": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000
+          },
+          "minimum_phase": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4294967295
+          },
+          "maximum_phase": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4294967295
+          },
+          "required_group_size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 40
+          },
+          "money_cost_copper": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 18446744073709551615
+          },
+          "travel_seconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9223372036854775807
+          },
+          "seconds_per_attempt": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9223372036854775807
+          },
+          "required_capabilities": {
+            "type": "array",
+            "uniqueItems": true,
+            "maxItems": 64,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_.-]*$",
+              "maxLength": 160
+            }
+          },
+          "required_profession_skill_id": {
+            "$ref": "common-v1.schema.json#/$defs/uint32"
+          },
+          "required_profession_skill_value": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 450
+          },
+          "quest_alternative_group": {
+            "anyOf": [
+              {
+                "$ref": "common-v1.schema.json#/$defs/stable_id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "craft_dependencies": {
+            "type": "array",
+            "maxItems": 64,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "item_id",
+                "count",
+                "available",
+                "phase_authorized",
+                "earned"
+              ],
+              "properties": {
+                "item_id": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 4294967295
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 4294967295
+                },
+                "available": {
+                  "type": "boolean"
+                },
+                "phase_authorized": {
+                  "type": "boolean"
+                },
+                "earned": {
+                  "const": true
+                }
+              }
+            }
+          },
+          "condition_root": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160
+          },
+          "earned": {
+            "const": true
+          },
+          "risk_evidence": {
+            "$ref": "#/$defs/metric_evidence"
+          },
+          "contention_evidence": {
+            "$ref": "#/$defs/metric_evidence"
+          }
+        }
+      }
+    },
+    "generation_identity": {
+      "$ref": "https://local.playerbots.invalid/schemas/core1-cpi211-generation-envelope-v2.schema.json#/$defs/generation_identity"
+    }
+  },
+  "$defs": {
+    "metric_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "actor_identity",
+        "character_id",
+        "session_incarnation",
+        "strategic_generation",
+        "goal_revision",
+        "profile_id",
+        "party_id",
+        "phase",
+        "route_id",
+        "route_revision",
+        "phase_digest"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "common-v1.schema.json#/$defs/stable_id"
+        },
+        "actor_identity": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "character_id": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "session_incarnation": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "strategic_generation": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 18446744073709551615
+        },
+        "goal_revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "profile_id": {
+          "$ref": "common-v1.schema.json#/$defs/stable_id"
+        },
+        "party_id": {
+          "anyOf": [
+            {
+              "$ref": "common-v1.schema.json#/$defs/stable_id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "phase": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4294967295
+        },
+        "route_id": {
+          "$ref": "common-v1.schema.json#/$defs/stable_id"
+        },
+        "route_revision": {
+          "$ref": "common-v1.schema.json#/$defs/revision"
+        },
+        "phase_digest": {
+          "$ref": "common-v1.schema.json#/$defs/digest"
+        }
+      }
+    },
+    "metric_episode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "episode_id",
+        "started_monotonic_ns",
+        "ended_monotonic_ns",
+        "outcome",
+        "terminal_evidence_digest"
+      ],
+      "properties": {
+        "episode_id": {
+          "$ref": "common-v1.schema.json#/$defs/stable_id"
+        },
+        "started_monotonic_ns": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "ended_monotonic_ns": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "outcome": {
+          "enum": [
+            "success",
+            "adverse",
+            "contended",
+            "censored"
+          ]
+        },
+        "terminal_evidence_digest": {
+          "$ref": "common-v1.schema.json#/$defs/digest"
+        }
+      }
+    },
+    "metric_evidence": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "context",
+            "unknown_reason"
+          ],
+          "properties": {
+            "state": {
+              "const": "unknown"
+            },
+            "context": {
+              "$ref": "#/$defs/metric_context"
+            },
+            "unknown_reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "context",
+            "episodes",
+            "sample_count",
+            "event_count",
+            "censored_count"
+          ],
+          "properties": {
+            "state": {
+              "const": "measured"
+            },
+            "context": {
+              "$ref": "#/$defs/metric_context"
+            },
+            "episodes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10000,
+              "items": {
+                "$ref": "#/$defs/metric_episode"
+              }
+            },
+            "sample_count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            },
+            "event_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            },
+            "censored_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "context",
+            "episodes",
+            "sample_count",
+            "event_count",
+            "censored_count",
+            "probability_per_thousand",
+            "calibration_id",
+            "calibration_revision",
+            "context_digest",
+            "uncertainty_low_per_thousand",
+            "uncertainty_high_per_thousand"
+          ],
+          "properties": {
+            "state": {
+              "const": "calibrated"
+            },
+            "context": {
+              "$ref": "#/$defs/metric_context"
+            },
+            "episodes": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10000,
+              "items": {
+                "$ref": "#/$defs/metric_episode"
+              }
+            },
+            "sample_count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            },
+            "event_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            },
+            "censored_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000
+            },
+            "probability_per_thousand": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "calibration_id": {
+              "$ref": "common-v1.schema.json#/$defs/stable_id"
+            },
+            "calibration_revision": {
+              "$ref": "common-v1.schema.json#/$defs/revision"
+            },
+            "context_digest": {
+              "$ref": "common-v1.schema.json#/$defs/digest"
+            },
+            "uncertainty_low_per_thousand": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "uncertainty_high_per_thousand": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            }
+          }
+        }
+      ]
+    }
+  }
+}

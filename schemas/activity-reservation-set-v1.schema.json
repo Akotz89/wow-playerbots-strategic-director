@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/activity-reservation-set-v1.schema.json",
+  "title": "Playerbots activity reservation set v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "revision", "generated_at_seconds", "reservations"],
+  "properties": {
+    "schema_version": { "const": "cpi-193-activity-reservations-v1" },
+    "revision": { "$ref": "common-v1.schema.json#/$defs/revision" },
+    "generated_at_seconds": { "$ref": "common-v1.schema.json#/$defs/timestamp" },
+    "reservations": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["character_id", "activity_id", "owner_id", "kind", "expires_at_seconds"],
+        "properties": {
+          "character_id": { "type": "integer", "minimum": 1, "maximum": 18446744073709551615 },
+          "activity_id": { "$ref": "common-v1.schema.json#/$defs/stable_id" },
+          "owner_id": { "$ref": "common-v1.schema.json#/$defs/stable_id" },
+          "kind": {
+            "enum": ["solo_objective", "outdoor_quest_group", "dungeon_lfg", "guild_objective", "world_pvp"]
+          },
+          "expires_at_seconds": { "$ref": "common-v1.schema.json#/$defs/timestamp" }
+        }
+      }
+    }
+  }
+}

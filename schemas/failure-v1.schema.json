@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/failure-v1.schema.json",
+  "title": "Playerbots scoped failure evidence v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "objective_id", "scope", "context", "failure_count", "last_failure_seconds", "classification", "observation_digest"],
+  "properties": {
+    "schema_version": { "const": "cpi-207-failure-v1" },
+    "objective_id": { "$ref": "common-v1.schema.json#/$defs/stable_id" },
+    "scope": { "enum": ["character", "cohort", "global"] },
+    "context": { "$ref": "common-v1.schema.json#/$defs/execution_context" },
+    "failure_count": { "type": "integer", "minimum": 1, "maximum": 4294967295 },
+    "last_failure_seconds": { "$ref": "common-v1.schema.json#/$defs/timestamp" },
+    "classification": { "enum": ["no_progress", "path_unreachable", "mechanic_unsupported", "target_missing", "content_ineligible", "party_not_ready", "resource_shortage", "timeout", "executor_error"] },
+    "observation_digest": { "$ref": "common-v1.schema.json#/$defs/digest" }
+  }
+}

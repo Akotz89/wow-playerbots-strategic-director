@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/group-plan-v1.schema.json",
+  "title": "Playerbots strategic group plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "plan_id", "objective_id", "leader_character_id", "minimum_members", "maximum_members", "required_roles", "members", "state", "expires_at_seconds"],
+  "properties": {
+    "schema_version": { "const": "cpi-207-group-plan-v1" },
+    "plan_id": { "$ref": "common-v1.schema.json#/$defs/stable_id" },
+    "objective_id": { "$ref": "common-v1.schema.json#/$defs/stable_id" },
+    "leader_character_id": { "type": "integer", "minimum": 1, "maximum": 18446744073709551615 },
+    "minimum_members": { "type": "integer", "minimum": 1, "maximum": 40 },
+    "maximum_members": { "type": "integer", "minimum": 1, "maximum": 40 },
+    "required_roles": { "type": "object", "additionalProperties": false, "properties": { "tank": { "type": "integer", "minimum": 0, "maximum": 40 }, "healer": { "type": "integer", "minimum": 0, "maximum": 40 }, "damage": { "type": "integer", "minimum": 0, "maximum": 40 } } },
+    "members": { "type": "array", "uniqueItems": true, "maxItems": 40, "items": { "type": "integer", "minimum": 1, "maximum": 18446744073709551615 } },
+    "state": { "enum": ["forming", "ready", "active", "completed", "expired", "cancelled"] },
+    "expires_at_seconds": { "$ref": "common-v1.schema.json#/$defs/timestamp" }
+  }
+}

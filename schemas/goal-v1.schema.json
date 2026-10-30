@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/goal-v1.schema.json",
+  "title": "Playerbots persistent strategic goal v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "goal_id", "character_id", "kind", "status", "priority", "created_at_seconds", "source", "dependencies"],
+  "properties": {
+    "schema_version": { "const": "cpi-207-goal-v1" },
+    "goal_id": { "$ref": "common-v1.schema.json#/$defs/stable_id" },
+    "character_id": { "type": "integer", "minimum": 1, "maximum": 18446744073709551615 },
+    "kind": { "enum": ["quest", "grind", "train", "vendor", "set_hearth", "flight", "item_source", "dungeon", "profession", "idle"] },
+    "target": { "$ref": "common-v1.schema.json#/$defs/content_ref" },
+    "status": { "enum": ["proposed", "active", "suspended", "completed", "skipped", "failed", "invalidated"] },
+    "priority": { "type": "integer", "minimum": 0, "maximum": 1000000 },
+    "created_at_seconds": { "$ref": "common-v1.schema.json#/$defs/timestamp" },
+    "source": { "enum": ["route", "gear_plan", "profession_plan", "group_plan", "recovery", "idle_policy"] },
+    "dependencies": { "type": "array", "uniqueItems": true, "maxItems": 64, "items": { "$ref": "common-v1.schema.json#/$defs/stable_id" } }
+  }
+}

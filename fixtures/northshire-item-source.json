@@ -1,0 +1,32 @@
+{
+  "schema_version": "cpi-207-item-source-v1",
+  "content_revision": "phase-1-19-v1",
+  "graph_digest": "1111111111111111111111111111111111111111111111111111111111111111",
+  "item_id": 25,
+  "sources": [
+    {
+      "source_id": "source:quest-783-reward-25",
+      "source_kind": "quest_reward",
+      "source_ref": {"kind": "quest", "id": 783},
+      "minimum_count": 1,
+      "maximum_count": 1,
+      "chance_numerator": 1,
+      "chance_denominator": 1,
+      "minimum_phase": 1,
+      "maximum_phase": 19,
+      "required_group_size": 1,
+      "money_cost_copper": 0,
+      "travel_seconds": 0,
+      "seconds_per_attempt": 0,
+      "risk_milli": 0,
+      "contention_milli": 0,
+      "required_capabilities": [],
+      "required_profession_skill_id": 0,
+      "required_profession_skill_value": 0,
+      "quest_alternative_group": null,
+      "craft_dependencies": [],
+      "condition_root": null,
+      "earned": true
+    }
+  ]
+}

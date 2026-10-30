@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/profile-v1.schema.json",
+  "title": "Playerbots strategic behavior profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile_id", "profile_version", "archetype", "risk_tolerance_milli", "exploration_milli", "social_milli", "profession_focus_milli", "play_window", "allowed_goal_kinds"],
+  "properties": {
+    "schema_version": { "const": "cpi-207-profile-v1" },
+    "profile_id": { "$ref": "common-v1.schema.json#/$defs/stable_id" },
+    "profile_version": { "$ref": "common-v1.schema.json#/$defs/revision" },
+    "archetype": { "enum": ["balanced", "quest_focused", "explorer", "social", "crafter", "dungeon_focused"] },
+    "risk_tolerance_milli": { "type": "integer", "minimum": 0, "maximum": 1000 },
+    "exploration_milli": { "type": "integer", "minimum": 0, "maximum": 1000 },
+    "social_milli": { "type": "integer", "minimum": 0, "maximum": 1000 },
+    "profession_focus_milli": { "type": "integer", "minimum": 0, "maximum": 1000 },
+    "play_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum_minutes", "maximum_minutes", "cooldown_minutes"],
+      "properties": {
+        "minimum_minutes": { "type": "integer", "minimum": 1, "maximum": 1440 },
+        "maximum_minutes": { "type": "integer", "minimum": 1, "maximum": 1440 },
+        "cooldown_minutes": { "type": "integer", "minimum": 0, "maximum": 10080 }
+      }
+    },
+    "allowed_goal_kinds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["quest", "grind", "train", "vendor", "set_hearth", "flight", "item_source", "dungeon", "profession", "idle"] }
+    }
+  }
+}

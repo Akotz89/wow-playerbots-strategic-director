@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/replay-envelope-v1.schema.json",
+  "title": "Playerbots strategic decision replay envelope v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "catalogue_digest", "policy", "snapshot", "candidates", "failures", "expected"],
+  "properties": {
+    "schema_version": { "const": "cpi-207-replay-v1" },
+    "catalogue_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "snapshot": { "$ref": "#/$defs/snapshot" },
+    "candidates": { "type": "array", "minItems": 1, "maxItems": 10000, "items": { "$ref": "#/$defs/candidate" } },
+    "failures": { "type": "array", "maxItems": 10000, "items": { "$ref": "#/$defs/failure" } },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["disposition", "selected_stable_id", "evaluations"],
+      "properties": {
+        "disposition": { "enum": ["selected_objective", "stock_new_rpg_fallback", "defer_existing_control"] },
+        "selected_stable_id": { "type": ["string", "null"] },
+        "evaluations": { "type": "array", "maxItems": 10000, "items": { "$ref": "#/$defs/expected_evaluation" } }
+      }
+    }
+  },
+  "$defs": {
+    "stable_id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]*:[a-zA-Z0-9_.:-]+$", "maxLength": 160 },
+    "metric": { "type": "integer", "minimum": 0, "maximum": 1000000000 },
+    "weight": { "type": "integer", "minimum": 0, "maximum": 1000000 },
+    "revision": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "xp_weight", "unlock_weight", "gear_weight", "profession_weight", "continuity_weight", "group_synergy_weight", "travel_second_cost", "execution_second_cost", "risk_milli_divisor", "contention_milli_divisor", "prior_failure_cost", "base_failure_backoff_seconds", "maximum_backoff_doublings", "failure_decay_seconds"],
+      "properties": {
+        "version": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "xp_weight": { "$ref": "#/$defs/weight" },
+        "unlock_weight": { "$ref": "#/$defs/weight" },
+        "gear_weight": { "$ref": "#/$defs/weight" },
+        "profession_weight": { "$ref": "#/$defs/weight" },
+        "continuity_weight": { "$ref": "#/$defs/weight" },
+        "group_synergy_weight": { "$ref": "#/$defs/weight" },
+        "travel_second_cost": { "$ref": "#/$defs/weight" },
+        "execution_second_cost": { "$ref": "#/$defs/weight" },
+        "risk_milli_divisor": { "type": "integer", "minimum": 1, "maximum": 1000000000 },
+        "contention_milli_divisor": { "type": "integer", "minimum": 1, "maximum": 1000000000 },
+        "prior_failure_cost": { "$ref": "#/$defs/weight" },
+        "base_failure_backoff_seconds": { "type": "integer", "minimum": 0, "maximum": 86400 },
+        "maximum_backoff_doublings": { "type": "integer", "minimum": 0, "maximum": 20 },
+        "failure_decay_seconds": { "type": "integer", "minimum": 1, "maximum": 31536000 }
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["character_id", "level", "phase", "group_size", "map_id", "zone_id", "now_seconds", "core_revision", "playerbots_revision", "content_revision", "content_graph_digest", "route_id", "route_revision", "catalogue_digest", "profile_id", "profile_version", "capability_fingerprint", "population_admitted", "schedule_active", "in_combat", "on_taxi", "in_battleground_or_arena", "logging_out", "forced_travel", "has_human_master", "capabilities"],
+      "properties": {
+        "character_id": { "type": "integer", "minimum": 1, "maximum": 18446744073709551615 },
+        "level": { "type": "integer", "minimum": 1, "maximum": 80 },
+        "phase": { "type": "integer", "minimum": 1, "maximum": 4294967295 },
+        "group_size": { "type": "integer", "minimum": 1, "maximum": 40 },
+        "map_id": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+        "zone_id": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+        "now_seconds": { "type": "integer", "minimum": 0, "maximum": 4102444800 },
+        "core_revision": { "$ref": "#/$defs/revision" },
+        "playerbots_revision": { "$ref": "#/$defs/revision" },
+        "content_revision": { "$ref": "#/$defs/revision" },
+        "content_graph_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "route_id": { "$ref": "#/$defs/stable_id" },
+        "route_revision": { "$ref": "#/$defs/revision" },
+        "catalogue_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "profile_id": { "$ref": "#/$defs/stable_id" },
+        "profile_version": { "$ref": "#/$defs/revision" },
+        "capability_fingerprint": { "$ref": "#/$defs/revision" },
+        "population_admitted": { "type": "boolean" },
+        "schedule_active": { "type": "boolean" },
+        "in_combat": { "type": "boolean" },
+        "on_taxi": { "type": "boolean" },
+        "in_battleground_or_arena": { "type": "boolean" },
+        "logging_out": { "type": "boolean" },
+        "forced_travel": { "type": "boolean" },
+        "has_human_master": { "type": "boolean" },
+        "capabilities": { "type": "object", "additionalProperties": { "type": "boolean" } }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stable_id", "kind", "minimum_level", "maximum_level", "minimum_phase", "maximum_phase", "required_group_size", "available", "phase_authorized", "earned_source", "required_capabilities", "xp_value", "unlock_value", "gear_value", "profession_value", "continuity_value", "group_synergy_value", "travel_seconds", "execution_seconds", "risk_milli", "contention_milli"],
+      "properties": {
+        "stable_id": { "$ref": "#/$defs/stable_id" },
+        "kind": { "enum": ["quest", "grind", "train", "vendor", "set_hearth", "flight", "item_source", "dungeon", "profession", "idle"] },
+        "minimum_level": { "type": "integer", "minimum": 1, "maximum": 80 },
+        "maximum_level": { "type": "integer", "minimum": 1, "maximum": 80 },
+        "minimum_phase": { "type": "integer", "minimum": 1, "maximum": 4294967295 },
+        "maximum_phase": { "type": "integer", "minimum": 1, "maximum": 4294967295 },
+        "required_group_size": { "type": "integer", "minimum": 1, "maximum": 40 },
+        "available": { "type": "boolean" },
+        "phase_authorized": { "type": "boolean" },
+        "earned_source": { "type": "boolean" },
+        "required_capabilities": { "type": "array", "uniqueItems": true, "maxItems": 64, "items": { "type": "string", "minLength": 1, "maxLength": 160 } },
+        "xp_value": { "$ref": "#/$defs/metric" },
+        "unlock_value": { "$ref": "#/$defs/metric" },
+        "gear_value": { "$ref": "#/$defs/metric" },
+        "profession_value": { "$ref": "#/$defs/metric" },
+        "continuity_value": { "$ref": "#/$defs/metric" },
+        "group_synergy_value": { "$ref": "#/$defs/metric" },
+        "travel_seconds": { "$ref": "#/$defs/metric" },
+        "execution_seconds": { "$ref": "#/$defs/metric" },
+        "risk_milli": { "$ref": "#/$defs/metric" },
+        "contention_milli": { "$ref": "#/$defs/metric" }
+      }
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stable_id", "scope", "character_id", "phase", "map_id", "zone_id", "group_size", "failure_count", "last_failure_seconds", "classification", "core_revision", "playerbots_revision", "content_revision", "content_graph_digest", "profile_id", "capability_fingerprint"],
+      "properties": {
+        "stable_id": { "$ref": "#/$defs/stable_id" },
+        "scope": { "enum": ["character", "cohort", "global"] },
+        "character_id": { "type": "integer", "minimum": 1, "maximum": 18446744073709551615 },
+        "phase": { "type": "integer", "minimum": 1, "maximum": 4294967295 },
+        "map_id": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+        "zone_id": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+        "group_size": { "type": "integer", "minimum": 1, "maximum": 40 },
+        "failure_count": { "type": "integer", "minimum": 1, "maximum": 4294967295 },
+        "last_failure_seconds": { "type": "integer", "minimum": 0, "maximum": 4102444800 },
+        "classification": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "core_revision": { "$ref": "#/$defs/revision" },
+        "playerbots_revision": { "$ref": "#/$defs/revision" },
+        "content_revision": { "$ref": "#/$defs/revision" },
+        "content_graph_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "profile_id": { "type": "string", "maxLength": 160 },
+        "capability_fingerprint": { "$ref": "#/$defs/revision" }
+      }
+    },
+    "expected_evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stable_id", "eligible", "score", "retry_at_seconds", "rejection_reasons"],
+      "properties": {
+        "stable_id": { "$ref": "#/$defs/stable_id" },
+        "eligible": { "type": "boolean" },
+        "score": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["xp", "unlocks", "gear", "profession", "continuity", "group_synergy", "travel", "execution", "risk", "contention", "prior_failures", "total"],
+          "properties": {
+            "xp": { "type": "integer" },
+            "unlocks": { "type": "integer" },
+            "gear": { "type": "integer" },
+            "profession": { "type": "integer" },
+            "continuity": { "type": "integer" },
+            "group_synergy": { "type": "integer" },
+            "travel": { "type": "integer" },
+            "execution": { "type": "integer" },
+            "risk": { "type": "integer" },
+            "contention": { "type": "integer" },
+            "prior_failures": { "type": "integer" },
+            "total": { "type": "integer" }
+          }
+        },
+        "retry_at_seconds": { "type": "integer", "minimum": 0, "maximum": 9223372036854775807 },
+        "rejection_reasons": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

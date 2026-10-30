@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/observation-v1.schema.json",
+  "title": "Playerbots strategic observation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "observed_at_seconds", "context", "level", "xp", "money", "control", "admission", "capabilities", "completed_quests", "active_quests", "inventory", "equipped_items", "profession_skills", "known_taxi_nodes"],
+  "properties": {
+    "schema_version": { "const": "cpi-207-observation-v1" },
+    "observed_at_seconds": { "$ref": "common-v1.schema.json#/$defs/timestamp" },
+    "context": { "$ref": "common-v1.schema.json#/$defs/execution_context" },
+    "level": { "type": "integer", "minimum": 1, "maximum": 80 },
+    "xp": { "$ref": "common-v1.schema.json#/$defs/uint32" },
+    "money": { "type": "integer", "minimum": 0, "maximum": 9223372036854775807 },
+    "control": {
+      "type": "object", "additionalProperties": false,
+      "required": ["in_combat", "on_taxi", "in_battleground_or_arena", "logging_out", "forced_travel", "has_human_master"],
+      "properties": {
+        "in_combat": { "type": "boolean" }, "on_taxi": { "type": "boolean" },
+        "in_battleground_or_arena": { "type": "boolean" }, "logging_out": { "type": "boolean" },
+        "forced_travel": { "type": "boolean" }, "has_human_master": { "type": "boolean" }
+      }
+    },
+    "admission": {
+      "type": "object", "additionalProperties": false,
+      "required": ["population_admitted", "schedule_active"],
+      "properties": { "population_admitted": { "type": "boolean" }, "schedule_active": { "type": "boolean" } }
+    },
+    "capabilities": { "type": "object", "propertyNames": { "pattern": "^[a-z][a-z0-9_.-]*$" }, "additionalProperties": { "type": "boolean" } },
+    "completed_quests": { "type": "array", "uniqueItems": true, "items": { "$ref": "common-v1.schema.json#/$defs/uint32" } },
+    "active_quests": { "type": "array", "uniqueItems": true, "items": { "$ref": "common-v1.schema.json#/$defs/uint32" } },
+    "inventory": { "type": "array", "items": { "$ref": "#/$defs/item_stack" } },
+    "equipped_items": { "type": "array", "items": { "$ref": "#/$defs/equipped_item" } },
+    "profession_skills": { "type": "object", "propertyNames": { "pattern": "^[0-9]+$" }, "additionalProperties": { "type": "integer", "minimum": 0, "maximum": 450 } },
+    "known_taxi_nodes": { "type": "array", "uniqueItems": true, "items": { "$ref": "common-v1.schema.json#/$defs/uint32" } }
+  },
+  "$defs": {
+    "item_stack": { "type": "object", "additionalProperties": false, "required": ["item_id", "count"], "properties": { "item_id": { "$ref": "common-v1.schema.json#/$defs/uint32" }, "count": { "type": "integer", "minimum": 1, "maximum": 4294967295 } } },
+    "equipped_item": { "type": "object", "additionalProperties": false, "required": ["slot", "item_id"], "properties": { "slot": { "type": "integer", "minimum": 0, "maximum": 18 }, "item_id": { "$ref": "common-v1.schema.json#/$defs/uint32" } } }
+  }
+}

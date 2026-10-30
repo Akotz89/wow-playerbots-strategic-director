@@ -1,0 +1,36 @@
+{
+  "schema_version": "cpi-207-content-graph-v1",
+  "core_revision": "9fb906bb7296212ff42fc95ff73a92aaf8554f0d",
+  "playerbots_revision": "2f7d9f774987d0157c6a0d0cc08c40bec3db3945",
+  "progression_revision": "progression-v1",
+  "content_revision": "phase-1-19-v1",
+  "world_dump_digest": "f104656e0000000000000000000000000000000000000000000000000d02d642",
+  "dbc_set_digest": "7ec5827400000000000000000000000000000000000000000000000000cd7620",
+  "availability_model": "realm_frontier+phase_mask+spawn_mask+event_pool+condition_ast",
+  "nodes": {
+    "quests": [{"id": 783, "availability": {"minimum_frontier": 1, "maximum_frontier": 19, "phase_mask": 1, "spawn_mask": 1, "event_ids": [], "pool_ids": [], "condition_id": null}, "attributes": {"minimum_level": 1, "quest_level": 1}}],
+    "items": [{"id": 25, "availability": {"minimum_frontier": 1, "maximum_frontier": 19, "phase_mask": 1, "spawn_mask": 1, "event_ids": [], "pool_ids": [], "condition_id": null}, "attributes": {"name": "Worn Shortsword"}}],
+    "creatures": [],
+    "gameobjects": [],
+    "spells": [],
+    "trainers": [],
+    "vendors": [],
+    "taxi_nodes": [],
+    "areas": [],
+    "maps": [],
+    "dungeons": [],
+    "loot_templates": [],
+    "recipes": []
+  },
+  "condition_roots": [],
+  "edges": [{
+    "edge_id": "edge:quest783-reward-item25",
+    "kind": "quest_reward",
+    "from": {"kind": "quest", "id": 783},
+    "to": {"kind": "item", "id": 25},
+    "semantics": "guaranteed_reward",
+    "availability": {"minimum_frontier": 1, "maximum_frontier": 19, "phase_mask": 1, "spawn_mask": 1, "event_ids": [], "pool_ids": [], "condition_id": null},
+    "attributes": {"count": 1, "earned": true},
+    "provenance": {"source": "quest_template.RewardItem1", "natural_key": [783, 25]}
+  }]
+}

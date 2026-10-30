@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/outcome-v1.schema.json",
+  "title": "Playerbots strategic objective outcome v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "decision_id", "objective_id", "context", "started_at_seconds", "ended_at_seconds", "result", "xp_delta", "money_delta", "items_gained", "items_consumed", "evidence_codes"],
+  "properties": {
+    "schema_version": { "const": "cpi-207-outcome-v1" },
+    "decision_id": { "$ref": "common-v1.schema.json#/$defs/stable_id" },
+    "objective_id": { "$ref": "common-v1.schema.json#/$defs/stable_id" },
+    "context": { "$ref": "common-v1.schema.json#/$defs/execution_context" },
+    "started_at_seconds": { "$ref": "common-v1.schema.json#/$defs/timestamp" },
+    "ended_at_seconds": { "$ref": "common-v1.schema.json#/$defs/timestamp" },
+    "result": { "enum": ["completed", "partial", "failed", "cancelled", "preempted", "invalidated"] },
+    "xp_delta": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+    "money_delta": { "type": "integer", "minimum": -9223372036854775808, "maximum": 9223372036854775807 },
+    "items_gained": { "type": "array", "items": { "$ref": "#/$defs/item_delta" } },
+    "items_consumed": { "type": "array", "items": { "$ref": "#/$defs/item_delta" } },
+    "evidence_codes": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9_.:-]*$", "maxLength": 160 } }
+  },
+  "$defs": {
+    "item_delta": { "type": "object", "additionalProperties": false, "required": ["item_id", "count"], "properties": { "item_id": { "$ref": "common-v1.schema.json#/$defs/uint32" }, "count": { "type": "integer", "minimum": 1, "maximum": 4294967295 } } }
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "schema_version": "cpi-207-replay-v1",
+  "catalogue_digest": "0000000000000000000000000000000000000000000000000000000000000783",
+  "policy": {
+    "version": "cpi-207-v1",
+    "xp_weight": 100,
+    "unlock_weight": 200,
+    "gear_weight": 150,
+    "profession_weight": 100,
+    "continuity_weight": 50,
+    "group_synergy_weight": 50,
+    "travel_second_cost": 2,
+    "execution_second_cost": 1,
+    "risk_milli_divisor": 10,
+    "contention_milli_divisor": 10,
+    "prior_failure_cost": 500,
+    "base_failure_backoff_seconds": 300,
+    "maximum_backoff_doublings": 6,
+    "failure_decay_seconds": 86400
+  },
+  "snapshot": {
+    "character_id": 42,
+    "level": 1,
+    "phase": 1,
+    "group_size": 1,
+    "map_id": 0,
+    "zone_id": 12,
+    "now_seconds": 10000,
+    "core_revision": "9fb906bb7296212ff42fc95ff73a92aaf8554f0d",
+    "playerbots_revision": "2f7d9f774987d0157c6a0d0cc08c40bec3db3945",
+    "content_revision": "phase-1-19-v1",
+    "content_graph_digest": "1111111111111111111111111111111111111111111111111111111111111111",
+    "route_id": "route:northshire-1-10",
+    "route_revision": "northshire-v1",
+    "catalogue_digest": "0000000000000000000000000000000000000000000000000000000000000783",
+    "profile_id": "profile:natural",
+    "profile_version": "profile-v1",
+    "capability_fingerprint": "caps-v1",
+    "population_admitted": true,
+    "schedule_active": true,
+    "in_combat": false,
+    "on_taxi": false,
+    "in_battleground_or_arena": false,
+    "logging_out": false,
+    "forced_travel": false,
+    "has_human_master": false,
+    "capabilities": { "quest_kill": true }
+  },
+  "candidates": [
+    {
+      "stable_id": "quest:783", "kind": "quest", "minimum_level": 1, "maximum_level": 5,
+      "minimum_phase": 1, "maximum_phase": 1, "required_group_size": 1, "available": true,
+      "phase_authorized": true, "earned_source": true, "required_capabilities": ["quest_kill"],
+      "xp_value": 10, "unlock_value": 1, "gear_value": 0, "profession_value": 0,
+      "continuity_value": 2, "group_synergy_value": 0, "travel_seconds": 30,
+      "execution_seconds": 120, "risk_milli": 100, "contention_milli": 0
+    },
+    {
+      "stable_id": "grind:northshire-1", "kind": "grind", "minimum_level": 1, "maximum_level": 5,
+      "minimum_phase": 1, "maximum_phase": 1, "required_group_size": 1, "available": true,
+      "phase_authorized": true, "earned_source": true, "required_capabilities": ["quest_kill"],
+      "xp_value": 8, "unlock_value": 0, "gear_value": 0, "profession_value": 0,
+      "continuity_value": 0, "group_synergy_value": 0, "travel_seconds": 10,
+      "execution_seconds": 180, "risk_milli": 50, "contention_milli": 0
+    }
+  ],
+  "failures": [],
+  "expected": {
+    "disposition": "selected_objective",
+    "selected_stable_id": "quest:783",
+    "evaluations": [
+      {
+        "stable_id": "quest:783",
+        "eligible": true,
+        "score": { "xp": 1000, "unlocks": 200, "gear": 0, "profession": 0, "continuity": 100, "group_synergy": 0, "travel": -60, "execution": -120, "risk": -10, "contention": 0, "prior_failures": 0, "total": 1110 },
+        "retry_at_seconds": 0,
+        "rejection_reasons": []
+      },
+      {
+        "stable_id": "grind:northshire-1",
+        "eligible": true,
+        "score": { "xp": 800, "unlocks": 0, "gear": 0, "profession": 0, "continuity": 0, "group_synergy": 0, "travel": -20, "execution": -180, "risk": -5, "contention": 0, "prior_failures": 0, "total": 595 },
+        "retry_at_seconds": 0,
+        "rejection_reasons": []
+      }
+    ]
+  }
+}

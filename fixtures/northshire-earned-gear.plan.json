@@ -1,0 +1,50 @@
+{
+  "schema_version": "cpi-207-gear-plan-v1",
+  "plan_id": "gear_plan:42:10000",
+  "character_id": 42,
+  "content_revision": "phase-1-19-v1",
+  "content_graph_digest": "1111111111111111111111111111111111111111111111111111111111111111",
+  "policy_version": "cpi-211-gear-v1",
+  "policy_identity": "cpi-211-gear-v1|upgrade=100|useful_level=200|profession=100|time=1|copper=100|risk_div=10|contention_div=10|minimum_useful_levels=2|minimum_pursuit_score=1",
+  "created_at_seconds": 10000,
+  "selected_target_id": "target:item-25-slot-15",
+  "selected_source_id": "source:quest-783-reward-25",
+  "selected_item_id": 25,
+  "evaluations": [
+    {
+      "target_id": "target:item-25-slot-15",
+      "source_id": "source:quest-783-reward-25",
+      "item_id": 25,
+      "eligible": true,
+      "disposition": "pursue",
+      "reason_codes": ["selected_highest_value"],
+      "score": {
+        "upgrade_utility": 1000,
+        "useful_life": 400,
+        "profession": 0,
+        "acquisition_time": 0,
+        "money": 0,
+        "risk": 0,
+        "contention": 0,
+        "total": 1400,
+        "expected_attempts_numerator": 1,
+        "expected_attempts_denominator": 1,
+        "expected_attempts_ceiling": 1,
+        "expected_acquisition_seconds": 0
+      }
+    }
+  ],
+  "targets": [
+    {
+      "target_id": "target:item-25-slot-15",
+      "slot": 15,
+      "item_id": 25,
+      "playerbots_upgrade_score": 10,
+      "expected_replacement_level": 10,
+      "profession_value": 0,
+      "status": "candidate",
+      "reason_codes": []
+    }
+  ],
+  "errors": []
+}

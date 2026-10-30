@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/content-manifest-v2.schema.json",
+  "title": "Playerbots bundle/pathset provenance manifest v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "compiler_revision",
+    "started_at",
+    "completed_at",
+    "source",
+    "migrations",
+    "dbc_files",
+    "row_counts",
+    "warning_counts",
+    "graph_digest",
+    "reproducible_peer_digest",
+    "generation_identity",
+    "source_identity",
+    "identity_commitment",
+    "coverage"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "cpi-211-content-manifest-v2"
+    },
+    "compiler_revision": {
+      "$ref": "common-v1.schema.json#/$defs/revision"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id",
+        "core_revision",
+        "playerbots_revision",
+        "progression_revision",
+        "world_dump_digest",
+        "config_digest",
+        "dbc_set_digest",
+        "content_revision"
+      ],
+      "properties": {
+        "candidate_id": {
+          "$ref": "common-v1.schema.json#/$defs/stable_id"
+        },
+        "core_revision": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "playerbots_revision": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "progression_revision": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "world_dump_digest": {
+          "$ref": "common-v1.schema.json#/$defs/digest"
+        },
+        "config_digest": {
+          "$ref": "common-v1.schema.json#/$defs/digest"
+        },
+        "dbc_set_digest": {
+          "$ref": "common-v1.schema.json#/$defs/digest"
+        },
+        "content_revision": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "migrations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ordinal",
+          "name",
+          "digest"
+        ],
+        "properties": {
+          "ordinal": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "digest": {
+            "$ref": "common-v1.schema.json#/$defs/digest"
+          }
+        }
+      }
+    },
+    "dbc_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "digest"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]+$"
+          },
+          "digest": {
+            "$ref": "common-v1.schema.json#/$defs/digest"
+          }
+        }
+      }
+    },
+    "row_counts": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "warning_counts": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "graph_digest": {
+      "$ref": "common-v1.schema.json#/$defs/digest"
+    },
+    "reproducible_peer_digest": {
+      "$ref": "common-v1.schema.json#/$defs/digest"
+    },
+    "generation_identity": {
+      "$ref": "https://local.playerbots.invalid/schemas/core1-cpi211-generation-envelope-v2.schema.json#/$defs/generation_identity"
+    },
+    "source_identity": {
+      "$ref": "https://local.playerbots.invalid/schemas/core1-cpi211-generation-envelope-v2.schema.json#/$defs/source_identity"
+    },
+    "identity_commitment": {
+      "type": "object",
+      "required": [
+        "scope",
+        "source_identity",
+        "world_snapshot",
+        "raw_generation_snapshot_id",
+        "native_source_snapshot_id",
+        "request_batches",
+        "coverage",
+        "support_inputs",
+        "compiler_schema_closure"
+      ]
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": true,
+      "minProperties": 1
+    }
+  }
+}

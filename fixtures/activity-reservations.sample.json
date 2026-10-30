@@ -1,0 +1,21 @@
+{
+  "schema_version": "cpi-193-activity-reservations-v1",
+  "revision": "activity-reservations-v1",
+  "generated_at_seconds": 1000,
+  "reservations": [
+    {
+      "character_id": 10,
+      "activity_id": "quest_group:westfall-001",
+      "owner_id": "director:ambient",
+      "kind": "outdoor_quest_group",
+      "expires_at_seconds": 1200
+    },
+    {
+      "character_id": 20,
+      "activity_id": "quest_group:westfall-001",
+      "owner_id": "director:ambient",
+      "kind": "outdoor_quest_group",
+      "expires_at_seconds": 1200
+    }
+  ]
+}

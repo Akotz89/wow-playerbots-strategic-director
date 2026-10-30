@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.playerbots.invalid/schemas/sync-state-v1.schema.json",
+  "title": "Playerbots strategic persistence synchronization state v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "character_id", "route_id", "route_revision", "catalogue_digest", "last_applied_sequence", "last_event_digest", "completed_steps", "skipped_steps"],
+  "properties": {
+    "schema_version": { "const": "cpi-207-sync-state-v1" },
+    "character_id": { "type": "integer", "minimum": 1, "maximum": 18446744073709551615 },
+    "route_id": { "$ref": "common-v1.schema.json#/$defs/stable_id" },
+    "route_revision": { "$ref": "common-v1.schema.json#/$defs/revision" },
+    "catalogue_digest": { "$ref": "common-v1.schema.json#/$defs/digest" },
+    "last_applied_sequence": { "type": "integer", "minimum": 0, "maximum": 18446744073709551615 },
+    "last_event_digest": { "$ref": "common-v1.schema.json#/$defs/digest" },
+    "completed_steps": { "type": "array", "uniqueItems": true, "maxItems": 10000, "items": { "$ref": "common-v1.schema.json#/$defs/stable_id" } },
+    "skipped_steps": { "type": "array", "uniqueItems": true, "maxItems": 10000, "items": { "$ref": "common-v1.schema.json#/$defs/stable_id" } }
+  }
+}
