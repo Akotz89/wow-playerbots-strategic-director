@@ -1,5 +1,12 @@
 # Playerbots strategic director pure core
 
+## Public CI scope
+
+Public CI runs the existing Python compiler and policy tests, schema parity,
+fixture validation and route digest checks. It does not compile C++, run the
+native consumer, or use a live realm. Passing CI is not deployment or gameplay
+acceptance; native builds remain subject to the project WSL build-host guard.
+
 This is the implementation-neutral CPI-207 decision kernel. It is intentionally
 separate from AzerothCore while CPI-191 owns the active server build and live realm.
 
